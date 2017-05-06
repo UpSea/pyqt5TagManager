@@ -78,17 +78,17 @@ class TagTreeModel(QAbstractItemModel):
         assert isinstance(index, QModelIndex), 'index должен быть объектом типа QModelIndex!'
         if not index.isValid():
             return False
-        if self._tag_valid_checker and self._tag_valid_checker.check(value):
-            item = index.internalPointer()
-            if self._color_helper:
-                self._color_helper.rename(item.tag_as_str(), value)
-            flag = item.setData(index.column(), value)
-            if flag:
-                self.dataChanged.emit(index, index)
+        item = index.internalPointer()
+        if self._tag_valid_checker:
+            if not self._tag_valid_checker.check(value):
+                self.invalidValueSetted.emit(self._tag_valid_checker.message())
+                return False
+        if self._color_helper:
+            self._color_helper.rename(item.tag_as_str(), value)
+        flag = item.setData(index.column(), value)
+        if flag:
+            self.dataChanged.emit(index, index)
             return flag
-        else:
-            self.invalidValueSetted.emit(self._tag_valid_checker.message())
-            return False
         return False
 
     def headerData(self, column, orientation, role):
