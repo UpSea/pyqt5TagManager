@@ -126,6 +126,8 @@ class TagManager(QWidget):
         but_font = QPushButton('Set Font', self)
         layout.addWidget(but_font)
         but_font.clicked.connect(self.but_font_dialog_clicked)
+        self.layout().deleteLater() # Remove default layout
+        self.setLayout(layout)
 
     def _helper_set_font(self, font):
         assert isinstance(font, QFont), 'font must be an QFont'
