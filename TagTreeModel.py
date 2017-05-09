@@ -150,6 +150,8 @@ class TagTreeModel(QAbstractItemModel):
             p_item = self.rootItem
         else:
             p_item = parent.internalPointer()
+        if p_item is None:
+            return 0
         return p_item.childCount()
 
     def itemForIndex(self, index):
