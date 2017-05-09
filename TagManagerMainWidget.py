@@ -8,6 +8,7 @@ try:
     from PyQt5.QtGui import QFont
     from PyQt5.QtWidgets import (QPushButton, QFontDialog,
                                  QWidget, QAbstractItemView,
+                                 QApplication, QStyle,
                                  QTreeView, QHBoxLayout, QVBoxLayout, QMenu, QAction,
                                  QFileDialog, QMessageBox)
 except:
@@ -16,6 +17,7 @@ except:
     from PySide.QtGui import QFont
     from PySide.QtWidgets import (QPushButton, QFontDialog,
                                  QWidget, QAbstractItemView,
+                                 QApplication, QStyle,
                                  QTreeView, QHBoxLayout, QVBoxLayout, QMenu, QAction,
                                  QFileDialog, QMessageBox)
 
@@ -88,14 +90,17 @@ class TagManager(QWidget):
         ## Menu Layout
         menu_layout = QHBoxLayout(self)
         but_save = QPushButton('Save', self)
+        but_save.setIcon(QApplication.style().standardIcon(QStyle.SP_DialogSaveButton))
         menu_layout.addWidget(but_save)
         but_save.clicked.connect(self.but_save_clicked)
 
         but_load = QPushButton('Load', self)
+        but_load.setIcon(QApplication.style().standardIcon(QStyle.SP_DirOpenIcon))
         menu_layout.addWidget(but_load)
         but_load.clicked.connect(self.but_load_clicked)
 
         but_new_f = QPushButton('New tag collections', self)
+        but_new_f.setIcon(QApplication.style().standardIcon(QStyle.SP_FileIcon))
         but_new_f.setToolTip('New tag collections')
         menu_layout.addWidget(but_new_f)
         but_new_f.clicked.connect(self.but_new_tree_clicked)
@@ -116,6 +121,7 @@ class TagManager(QWidget):
         self._widget_tv = tv
 
         but = QPushButton('Remove Selected', self)
+        but.setIcon(QApplication.style().standardIcon(QStyle.SP_TrashIcon))
         layout.addWidget(but)
         but.clicked.connect(self.but_remove_clicked)
 
