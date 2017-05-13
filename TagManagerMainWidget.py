@@ -65,6 +65,8 @@ def process_filename(fname):
 class TagManager(QWidget):
     def __init__(self, parent=None):
         super(TagManager, self).__init__(parent)
+        # For save delete C++ backend
+        self.setAttribute(Qt.WA_DeleteOnClose)
         # Set data
         self._tag_checker = TagValidChecker()
         self._color_helper = TagColorHelper2()
