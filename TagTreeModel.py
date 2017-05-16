@@ -341,4 +341,49 @@ class TagTreeModel(QAbstractItemModel):
         if self._color_helper:
             self._color_helper.clear()
 
- 
+    ####################
+    ## Just helpers
+    def pathForIndex(self, index):
+        """
+        Path for index
+        :param index: QModelIndex object
+        :return: list of strings (str) (tag names)
+        """
+        assert isinstance(index, QModelIndex), 'index must be an QModelIndex'
+        if not index.isValid():
+            return []
+        path = []
+        thisIndex = index
+        while thisIndex.isValid():
+            path.insert(0, self.data(thisIndex))
+            thisIndex = thisIndex.parent()
+        return path
+
+
+    def indexForPath(self, path):
+        """
+        Index for path
+        :param path: list or tuple of str objects (tag names)
+        :return: QModelIndex
+        """
+        assert isinstance(path, (list, tuple)), 'path must be an list ot tuple'
+
+        def _indexForPath(parent, path2):
+            if len(path2) == 0:
+                return QModelIndex()
+            row = 0
+            parent_row_count = self.rowCount(parent)
+            while row < parent_row_count:
+                thisIndex = self.index(row, 0, parent)
+                cp = path2[0]
+                if self.data(thisIndex) == cp:
+                    if len(path2) == 1:
+                        return thisIndex
+                    thisIndex = _indexForPath(thisIndex, path2[1:])
+                    if thisIndex.isValid():
+                        return thisIndex
+                row += 1
+            return QModelIndex()
+
+        return _indexForPath(QModelIndex(), path)
+
