@@ -67,6 +67,8 @@ class TagManager(QWidget):
         super(TagManager, self).__init__(parent)
         # For save delete C++ backend
         self.setAttribute(Qt.WA_DeleteOnClose)
+        # Prepare for TreeView context menu
+        self.__treeview_context_menu = None
         # Set data
         self._tag_checker = TagValidChecker()
         self._color_helper = TagColorHelper2()
@@ -309,11 +311,21 @@ class TagManager(QWidget):
 
     @pyqtSlot(QPoint)
     def customContextMenuRequestedForTreeView(self, pos):
+        cached = self.__treeview_context_menu
+        if cached:
+            cached.popup(self._widget_tv.viewport().mapToGlobal(pos))
+            return
         menu = QMenu(self)
         removeAction = QAction("Remove", self)
         removeAction.triggered.connect(self.but_remove_clicked)
         newAction = QAction("Add new", self)
         newAction.triggered.connect(self.but_add_clicked)
+
+        newToRootAction = QAction("Add new to root", self)
+        newToRootAction.triggered.connect(self.but_add_to_root_clicked)
+
         menu.addAction(removeAction)
         menu.addAction(newAction)
+        menu.addAction(newToRootAction)
+        self.__treeview_context_menu = menu
         menu.popup(self._widget_tv.viewport().mapToGlobal(pos))
