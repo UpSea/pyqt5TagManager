@@ -96,7 +96,8 @@ class TagTreeModel(QAbstractItemModel):
             return QVariant(HORIZONTAL_HEADERS[column])
         return QVariant()
 
-    def index(self, row, column, parent):
+    def index(self, row, column, parent=None):
+        parent = parent if parent else QModelIndex()
         assert isinstance(parent, QModelIndex), 'parent должен быть объектом типа QModelIndex!'
         if not self.hasIndex(row, column, parent):
             return QModelIndex()
