@@ -20,18 +20,18 @@ class TagTreeModel(QAbstractItemModel):
     '''
     invalidValueSetted = pyqtSignal(str)
 
-    def __init__(self, tree, tagValidChecker=None, tagColorHelper=None, parent=None):
-        assert isinstance(tree, TagTreeItem), 'tree must be TagTreeItem'
+    def __init__(self, tree=None, tagValidChecker=None, tagColorHelper=None, parent=None):
         super(TagTreeModel, self).__init__(parent)
         # Создаём корень, вершину иерархии (скорее всего будет невидимой)
         # служебный элемент
-        self.rootItem = tree #TagTreeItem("Root")
+        self.rootItem = tree if tree else TagTreeItem("Root")
         # See http://www.qtcentre.org/threads/46896-Hide-Parent-and-show-only-children-in-QTreeView
         # for setRootIndex manually
         #self.rootItem.appendChild(tree)
         self._tag_valid_checker = tagValidChecker
         self._default_tag_name = 'Default tag'
-        tagColorHelper.init(tree)
+        if tree:
+            tagColorHelper.init(tree)
         self._color_helper = tagColorHelper
 
     def get_tree_root(self):
