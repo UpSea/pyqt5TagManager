@@ -338,3 +338,7 @@ class TagTreeModel(QAbstractItemModel):
     def resetInternalData(self):
         '''Это могло быть удалено в Qt 5.0, но лучше подстраховаться.'''
         self.safe_clear_when_removed()
+        if self._color_helper:
+            self._color_helper.clear()
+
+ 
