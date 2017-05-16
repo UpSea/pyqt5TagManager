@@ -135,11 +135,17 @@ class TagTreeModel(QAbstractItemModel):
         parent = node.parent()
         if parent is None:
             return QModelIndex()
+        # Two variants of row use and overloading
+        # Result are equals (результат и суть обоих подходов идентичны)
+        #One way:
+        row = parent.row()
+        assert row != -1
+        return self.createIndex(row, 0, parent)
+        #Other way for example
         grandparent = parent.parent()
         if grandparent is None:
             return QModelIndex()
-        #row = grandparent.row(parent)
-        row = parent.row()
+        row = grandparent.row_for_our_child(parent)
         assert row != -1
         return self.createIndex(row, 0, parent)
 
