@@ -59,7 +59,7 @@ class TagTreeModel(QAbstractItemModel):
         else:
             return len(HORIZONTAL_HEADERS)
 
-    def data(self, index, role):
+    def data(self, index, role=Qt.DisplayRole):
         assert isinstance(index, QModelIndex), 'index должен быть объектом типа QModelIndex!'
         if not index.isValid():
             return QVariant()
@@ -73,7 +73,7 @@ class TagTreeModel(QAbstractItemModel):
             return self._color_helper.color_for_tag(item.tag_as_str())
         return QVariant()
 
-    def setData(self, index, value, role=None):
+    def setData(self, index, value, role=Qt.EditRole):
         '''Для редактирования'''
         assert isinstance(index, QModelIndex), 'index должен быть объектом типа QModelIndex!'
         if not index.isValid():
