@@ -133,6 +133,11 @@ class TagManager(QWidget):
         layout.addWidget(but_add)
         but_add.clicked.connect(self.but_add_clicked)
 
+        but_add_to_root = QPushButton('Add new element to root')
+        but_add_to_root.setToolTip("Add new element to root of tree.")
+        layout.addWidget(but_add_to_root)
+        but_add_to_root.clicked.connect(self.but_add_to_root_clicked)
+
         but_font = QPushButton('Set Font', self)
         layout.addWidget(but_font)
         but_font.clicked.connect(self.but_font_dialog_clicked)
@@ -219,6 +224,12 @@ class TagManager(QWidget):
         if not index:
             index = QModelIndex()
         model.insertRow(0, index)
+
+    @pyqtSlot()
+    def but_add_to_root_clicked(self):
+        """Button for add new element to root element"""
+        model = self._widget_tv.model()
+        model.insertRow(0, QModelIndex())
 
     @pyqtSlot()
     def but_save_clicked(self):
