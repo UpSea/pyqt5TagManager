@@ -138,6 +138,16 @@ class TagManager(QWidget):
         layout.addWidget(but_add_to_root)
         but_add_to_root.clicked.connect(self.but_add_to_root_clicked)
 
+        but_item_up = QPushButton("Up")
+        but_item_up.setToolTip("Up selected item.")
+        but_item_up.clicked.connect(self.but_item_up_clicked)
+        layout.addWidget(but_item_up)
+
+        but_item_down = QPushButton("Down")
+        but_item_down.setToolTip("Down selected item.")
+        but_item_down.clicked.connect(self.but_item_down_clicked)
+        layout.addWidget(but_item_down)
+
         but_font = QPushButton('Set Font', self)
         layout.addWidget(but_font)
         but_font.clicked.connect(self.but_font_dialog_clicked)
@@ -230,6 +240,30 @@ class TagManager(QWidget):
         """Button for add new element to root element"""
         model = self._widget_tv.model()
         model.insertRow(0, QModelIndex())
+
+    @pyqtSlot()
+    def but_item_up_clicked(self):
+        _tv = self._widget_tv
+        model = _tv.model()
+        index = _tv.currentIndex()
+        if not index.isValid():
+            return
+        parent = index.parent()
+        index_row = index.row()
+        if index_row < 1:
+            return
+        model.moveRow(parent, index_row, parent, index_row-1)
+
+    @pyqtSlot()
+    def but_item_down_clicked(self):
+        _tv = self._widget_tv
+        model = _tv.model()
+        index = _tv.currentIndex()
+        if not index.isValid():
+            return
+        parent = index.parent()
+        index_row = index.row()
+        model.moveRow(parent, index_row, parent, index_row+1)
 
     @pyqtSlot()
     def but_save_clicked(self):
