@@ -252,18 +252,32 @@ class TagTreeModel(QAbstractItemModel):
     def moveRows(self, sourceParent, sourceRow, count, destinationParent, destinationChild):
         if not sourceParent.isValid() or not destinationParent.isValid():
             return False
-        if destinationParent != sourceParent:
-            return False
         p_s_item = sourceParent.internalPointer()
         p_d_item = destinationParent.internalPointer()
-        self.beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild)
+
         if p_s_item != p_d_item:
+            flag = self.beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild)
+            if not flag:
+                return False
             for i in range(count):
                 item = p_s_item.takeChild(sourceRow)
                 p_d_item.insertChild(destinationChild+i, item)
+            self.endMoveRows()
         else:
-            p_s_item.moveChilds(sourceRow, count, destinationChild)
-        self.endMoveRows()
+            if sourceRow > destinationChild:
+                # We can use official functions
+                flag = self.beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild)
+                if not flag:
+                    return False
+                p_s_item.moveChilds(sourceRow, count, destinationChild)
+                self.endMoveRows()
+            else:
+                # Because Qt bug! https://bugreports.qt.io/browse/QTBUG-6940
+                # Say "update full view!"
+                self.layoutAboutToBeChanged.emit()
+                p_s_item.moveChilds(sourceRow, count, destinationChild)
+                self.layoutChanged.emit()
+
         #self.rowsMoved.emit(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild)
         return True
 
